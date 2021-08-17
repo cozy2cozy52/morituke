@@ -1,0 +1,23 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Apr 21 14:31:09 2021
+
+@author: user
+"""
+
+body{
+    color:gray;
+    font-size:60pt;
+}
+
+h1{
+    font-size:20pt;
+}
+
+p{
+    margin:10px;
+}
+a{
+    color:blue;
+    text-decoration: none;
+}

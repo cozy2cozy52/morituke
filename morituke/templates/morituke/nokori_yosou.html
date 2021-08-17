@@ -1,0 +1,14 @@
+{% load static %}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>{{title}}</title>
+    <link rel="stylesheet" type="text/css"
+        href="{% static 'morituke/css/style.css' %}" />
+</head>
+<body>
+    <h1>{{title}}</h1>
+    {{df_nokori_cus|safe}}   
+</body>
+</html>

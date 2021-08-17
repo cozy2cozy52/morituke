@@ -1,0 +1,96 @@
+{% load static %}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>{{title}}</title>
+    <link rel="stylesheet" type="text/css"
+        href="{% static 'morituke/css/style.css' %}" />
+</head>
+<body>
+    <table>
+    <tr>
+        <td>
+            <h1>{{title}}({{youbi}})</h1>
+        </td>
+        
+        <td>
+            <script type="text/javascript">
+                function open4(f) {
+                    f.button.value = {{plus_day|safe}};
+                    f.target = "new";
+                    var w = window.open("about:blank", f.target, 'width=300, height=500,top=200,left=250');
+                    w.focus();
+                    f.submit();
+                }
+            </script>
+            
+            <table>
+            <tr>
+            <form action="{% url 'index' %}" method="post">
+                {% csrf_token %}
+                <td>昼</td><td><button type="submit" name="plus_day" value=0>今日</button></td>
+                <td><button type="submit" name="plus_day" value=1>明日</button></td>
+                <td><button type="submit" name="plus_day" value=2>明後日</button></td>
+                <td><button type="submit" name="plus_day" value=3>3日後</button></td>
+            </form>
+            <td>
+            <form method="post" action="{% url 'seizou' %}">
+              {% csrf_token %}
+              <input type="hidden" name="button" />
+              <input type="button" value="製造数入力画面へ" onclick="open4(this.form)" />
+            </form>
+            </td>
+            <td>
+            <form method="post" action="{% url 'nokori_yosou' %}">
+              {% csrf_token %}
+              <input type="hidden" name="button" />
+              
+            </form>
+            </td>
+            </tr>
+            <tr>
+            <form action="{% url 'dinner' %}" method="post">
+                {% csrf_token %}
+                <td>夕</td><td><button type="submit" name="plus_day" value=0>今日</button></td>
+                <td><button type="submit" name="plus_day" value=1>明日</button></td>
+                <td><button type="submit" name="plus_day" value=2>明後日</button></td>
+                <td><button type="submit" name="plus_day" value=3>3日後</button></td>
+            </form>
+            <td>
+            <form method="post" action="{% url 'tyousei' %}">
+              {% csrf_token %}
+              <input type="hidden" name="button" />
+              <input type="button" value="調整数入力画面へ" onclick="open4(this.form)" />
+            </form>
+            </td>
+            </tr>
+            </table>
+        </td>
+    </tr>
+    </table>
+    
+    <table>
+    <tr><td>総数：{{sousuu|safe}}  仕出数：{{shidashi_sousuu|safe}}</td></tr>
+    <tr><td valign="top">{{df_predict|safe}}</td>
+        <td valign="top">{{df_store_noon|safe}}</td>
+        <td valign="top">{{df_shidashi|safe}}</td>
+    </tr>
+    <tr><td valign="top">{{df_city|safe}}</td>
+        <td valign="top"></td>
+        <td valign="top">{{df_shidashi_cancel|safe}}</td>
+    </tr>
+    <tr><td valign="top">{{df_shikomi|safe}}</td>
+        <td valign="top"></td>
+        <td valign="top">{{df_append|safe}}</td>
+    </tr>
+    </table>
+    
+    <table>
+    <tr><td valign="top">{{df_cus_Ex|safe}}</td>
+        <td valign="top">{{df_time_over|safe}}</td>
+    </tr>
+    </table>
+    
+</body>
+</html>

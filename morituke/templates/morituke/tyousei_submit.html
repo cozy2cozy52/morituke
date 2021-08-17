@@ -1,0 +1,28 @@
+{% load static %}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>{{title}}</title>
+    <link rel="stylesheet" type="text/css"
+        href="{% static 'morituke/css/style.css' %}" />
+</head>
+<body>
+    <h1>{{title}}</h1>
+    <table>
+    <tr><td>並:{{nami|safe}}</td></tr>
+    <tr><td>大:{{oomori|safe}}</td></tr>
+    <tr><td>魚並:{{sakana_nami|safe}}</td></tr>
+    <tr><td>魚大:{{sakana_oomori|safe}}</td></tr>
+    <tr><td>から並:{{kara_nami|safe}}</td></tr>
+    <tr><td>から大:{{kara_oomori|safe}}</td></tr>
+    <tr><td>ハン並:{{han_nami|safe}}</td></tr>
+    <tr><td>ハン大:{{han_oomori|safe}}</td></tr>
+    <tr><td>うどん:{{udon|safe}}</td></tr>
+    <tr><td>そば:{{soba|safe}}</td></tr>
+    </table>
+    
+    <input type="button" value="閉じる" onClick="window.close()">
+    
+</body>
+</html>
