@@ -28,6 +28,8 @@ class shidashi_class:
         df = df[~(df['顧客名']=='お届け')]
         df = df.fillna('')
         df = df[df['単価']>10]
+        df = df[~(df['品名']=='お茶ペットボトル100')]
+        df = df.sort_values(['配達方面','単価'])
         
         df_store = df[df['配達方面']=='店舗']
         df_otodoke = df[df['配達方面']!='店舗']

@@ -14,7 +14,7 @@ from sqlalchemy import create_engine
 def login(db):
 
     driver = 'ODBC Driver 17 for SQL Server'
-    server = '192.168.24.10' # 30:dev  10:ofukuro
+    server = '192.168.24.30' # 30:dev  10:ofukuro
     username = 'sa'
     password = 'ofu'
     
