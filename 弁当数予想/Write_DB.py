@@ -63,7 +63,7 @@ def write_predict(store,product,num,predict_day):
                 VALUES (?,?,?,?,0);"""
         con.execute(sql,str_day1,store,product,num)
     
-write_predict("鈴鹿店","昼食弁当_並",40,datetime.date(2021,6,23))
+#write_predict("鈴鹿店","昼食弁当_並",40,datetime.date(2021,6,23))
 
 #%%　メニューの非表示を更新
 

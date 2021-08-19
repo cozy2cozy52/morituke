@@ -258,7 +258,33 @@ def read_delivery_data_chose_day(dict_col_list,db,
     
     return df
 
-
+#%%
+def read_youkakunin_chose_day(db,str_start_day,str_last_day,lunch_diner):
+    query_select_list = ['顧客名', '顧客ID']
+    query_select_list_str = query_select_str(query_select_list)
+    
+    # query文作成
+    query = query_select_list_str + \
+               'from 販売データ \
+               INNER JOIN 販売明細 ON 販売データ.伝票番号 = 販売明細.伝票番号 \
+               WHERE キャンセル = 0' + \
+               ' AND 時間帯 = ' + lunch_diner + \
+               " AND 日付 >= '" + str_start_day + "'" + \
+               " AND 日付 <= '" + str_last_day + "'" + \
+               ' AND 商品名 LIKE ? ' 
+               
+    #[query,tupls] = query_for_IN(query,[])
+    tupls = tuple(['要確認']) #+ tupls
+#    print(query)
+#    print(tupls)
+    
+    #　データ抽出、ｄｆ作成
+    df_columns = query_select_list
+    obj = sql2df(query,tupls,db,df_columns)
+    df = obj.make_df()
+    
+    return df
+#df = read_youkakunin_chose_day('鈴鹿店','210827','210827','01')
 #%% datetimeからお届けの文字の日付に変換
 
 def datetime2otodokeday(day1):

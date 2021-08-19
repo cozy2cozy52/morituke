@@ -22,7 +22,7 @@ def predict_num(predict_daytime_input,lunch_diner):
     
     inspect = 1 # 予想日の正解データを読み込むか
     
-    [df_agri_results,df_agri_orderd,df_cus_Ex,df_time_over] = \
+    [df_agri_results,df_agri_orderd,df_cus_prob,df_cus_youkaku] = \
         main_web.main(predict_daytime_input,db_list_Input,
                           lunch_diner,now_daytime,inspect)
     
@@ -42,7 +42,7 @@ def predict_num(predict_daytime_input,lunch_diner):
     df_pre = df_pre.fillna(0)
     df_pre = df_pre.astype(int)
     
-    return [df_pre,df_cus_Ex,df_time_over]
+    return [df_pre,df_cus_prob,df_cus_youkaku]
 
 # predict_daytime_input = datetime.datetime(2021,6,4,0,0,0)
 # [df_pre,df_cus_Ex,df_time_over] = predict_num(predict_daytime_input,'01','DEVELOP')

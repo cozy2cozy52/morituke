@@ -46,6 +46,7 @@ def pick_up_date_for_data(predict_day,now_daytime,
 #%%
 def caluculate_Ex_base(df_data,products_Name):
     df_cus_Ex = pd.DataFrame()
+    df_cus_prob = pd.DataFrame()
     bosuu = len(df_data['日付'].unique())
     for id1 in df_data['顧客ID']:
         df_tmp_id = df_data[df_data['顧客ID']==id1]
@@ -54,9 +55,9 @@ def caluculate_Ex_base(df_data,products_Name):
         if bosuu_id > 0:
             for p in products_Name:
                 df_tmp_p = df_tmp_id[df_tmp_id['商品名']==p]
-#                df_cus_prob.loc[id1,p] = len(df_tmp_p['日付'].unique())/bosuu
                 df_cus_Ex.loc[id1,p] = df_tmp_p['個数'].sum()/bosuu_id
-    return df_cus_Ex
+            df_cus_prob.loc[id1,'注文確率'] = len(df_tmp_id['日付'].unique())/bosuu
+    return [df_cus_Ex,df_cus_prob]
 
 #%%
 def INPUT_DB_Data(db,lunch_diner,now_daytime,past_data_days,products):
@@ -396,7 +397,7 @@ def write_DB_results(df_agri_results,lunch_diner,predict_day):
             n = df_agri_results.loc[s,p]
             Write_DB.write_predict("DEVELOP",store,p,n,predict_day)
 #%% 期待値を読み込んで、新しい注文を反映させて予想数を更新する
-def read_Ex_and_update_predict(f_name_order,f_name_Ex,db,lunch_diner,sn,
+def read_Ex_and_update_predict(f_name_order,f_name_Ex,f_name_prob,db,lunch_diner,sn,
                                predict_daytime,predict_day,now_daytime,df_products):
     # df_order_timeの読み込み
     df_order_time = pd.read_pickle(f_name_order)
@@ -418,17 +419,21 @@ def read_Ex_and_update_predict(f_name_order,f_name_Ex,db,lunch_diner,sn,
     
     # 期待値読み込み
     df_cus_Ex = pd.read_csv(f_name_Ex,encoding='utf_8_sig', index_col=0)
+    df_cus_prob = pd.read_csv(f_name_prob,encoding='utf_8_sig', index_col=0)
     
     # 注文済みのものを外す
     df_cus_Ex = df_cus_Ex[~df_cus_Ex.index.isin(df_pre_orderd['顧客ID'].unique())]
+    df_cus_prob = df_cus_prob[~df_cus_prob.index.isin(df_pre_orderd['顧客ID'].unique())]
+    
     # 時間切れの顧客を外す
     df_cus_Ex = df_cus_Ex[~df_cus_Ex.index.isin(df_time_over.index.unique())]
+    df_cus_prob = df_cus_prob[~df_cus_prob.index.isin(df_time_over.index.unique())]
     
     # 時間切れの顧客の期待値
     df_cus_Ex_time_over = df_cus_Ex[df_cus_Ex.index.isin(df_time_over.index.unique())]
     df_cus_Ex_time_over = df_cus_Ex_time_over[df_products.index].sum(axis=1)
     
-    return [df_cus_Ex,df_cus_Ex_time_over,df_pre_orderd,df_time_over]
+    return [df_cus_Ex,df_cus_prob,df_cus_Ex_time_over,df_pre_orderd,df_time_over]
 
 #%%
 def make_Ex(db,lunch_diner,
@@ -476,7 +481,8 @@ def make_Ex(db,lunch_diner,
         df_time_over = df_time_over[df_time_over.index!=cID]
 
     #% 期待値基本
-    df_cus_Ex_base = caluculate_Ex_base(df_past_data_sq,df_products.index)
+    [df_cus_Ex_base,df_cus_prob] = \
+        caluculate_Ex_base(df_past_data_sq,df_products.index)
     df_cus_Ex = df_cus_Ex_base
     
     #% メニューを反映させた期待値
@@ -492,18 +498,27 @@ def make_Ex(db,lunch_diner,
     for customID in df_cus_Ex.index:
         c_i = df_past_data_sq[df_past_data_sq['顧客ID']==customID].index[0]
         df_cus_Ex.loc[customID,'顧客名'] = df_past_data_sq.loc[c_i,'顧客名']
+        df_cus_prob.loc[customID,'顧客名'] = df_past_data_sq.loc[c_i,'顧客名']
     
-    df_past_data_sq.to_csv('data_sq.csv',encoding='utf_8_sig')
+    #注文確率
+    df_cus_prob = df_cus_prob[df_cus_prob['注文確率']>0.5]
+    df_cus_prob = df_cus_prob[~df_cus_prob.index.isin(df_pre_orderd['顧客ID'].unique())]
+
+    #df_past_data_sq.to_csv('data_sq.csv',encoding='utf_8_sig')
     
     f_name = '弁当数予想/注文予想の顧客リスト/予想顧客リスト' + db + lunch_diner + '_' + \
                 str(predict_day) + '_' + str(sn) +'.csv'
     df_cus_Ex.to_csv(f_name,encoding='utf_8_sig')
+    f_name = '弁当数予想/注文予想の顧客リスト/予想顧客リスト' + db + lunch_diner + '_' + \
+                str(predict_day) + '_' + str(sn) +'_prob.csv'
+    df_cus_prob.to_csv(f_name,encoding='utf_8_sig')
 
     #% 期待値 時刻切れ
     df_past_data_time_over = df_past_data[df_past_data['顧客ID'].isin(df_time_over.index.unique())]
-    df_cus_Ex_time_over = caluculate_Ex_base(df_past_data_time_over,df_products.index).sum(axis=1)
-
-    return [df_cus_Ex,df_cus_Ex_time_over,df_pre_orderd,df_time_over]
+    [df_cus_Ex_time_over,df_cus_prob_time_over] = \
+        caluculate_Ex_base(df_past_data_time_over,df_products.index)
+    df_cus_Ex_time_over = df_cus_Ex_time_over.sum(axis=1)
+    return [df_cus_Ex,df_cus_Ex_time_over,df_pre_orderd,df_time_over,df_cus_prob]
 
 #%%
 def update_save_df_time_over(db,lunch_diner,df_time_over,df_cus_Ex_time_over,
@@ -572,6 +587,8 @@ def main(predict_daytime_input,db_list_Input,lunch_diner,now_daytime,inspect):
     df_agri_correct = pd.DataFrame()
     df_agri_cus_Ex = pd.DataFrame()
     df_agri_time_over = pd.DataFrame()
+    df_agri_cus_prob = pd.DataFrame()
+    df_agri_cus_youkaku = pd.DataFrame()
     
     for db in db_list:
         
@@ -589,24 +606,44 @@ def main(predict_daytime_input,db_list_Input,lunch_diner,now_daytime,inspect):
                     str(predict_day) + '_' + str(sn) +'.pkl'
         f_name_Ex = '弁当数予想/注文予想の顧客リスト/予想顧客リスト' + db + lunch_diner + '_' + \
                     str(predict_day) + '_' + str(sn) +'.csv'
+        f_name_prob = '弁当数予想/注文予想の顧客リスト/予想顧客リスト' + db + lunch_diner + '_' + \
+                    str(predict_day) + '_' + str(sn) +'_prob.csv'
         # 期待値のファイルがあるか
         if (os.path.isfile(f_name_order)) & (os.path.isfile(f_name_Ex)):
             
             # 計算しておいた期待値を読み込み、新しい注文を加えて予想数を更新する
-            [df_cus_Ex,df_cus_Ex_time_over,df_pre_orderd,df_time_over] = \
-                    read_Ex_and_update_predict(f_name_order,f_name_Ex,
+            [df_cus_Ex,df_cus_prob,df_cus_Ex_time_over,df_pre_orderd,df_time_over] = \
+                    read_Ex_and_update_predict(f_name_order,f_name_Ex,f_name_prob,
                                                db,lunch_diner,sn,
                                                predict_daytime,predict_day,now_daytime,
                                                df_products)
             
         else:
             # 新しく期待値を計算する
-            [df_cus_Ex,df_cus_Ex_time_over,df_pre_orderd,df_time_over] = \
+            [df_cus_Ex,df_cus_Ex_time_over,df_pre_orderd,
+             df_time_over,df_cus_prob] = \
                     make_Ex(db,lunch_diner,
                             predict_day,predict_daytime,now_daytime,
                             term,term_holi,holidays,closed_days,holi_closed_menu_from_day,
-                            df_products,dead_time,sn,term_menu,df_date_menu)
-                    
+                            df_products,dead_time,sn,term_menu,df_date_menu)            
+        
+        # 注文確率と要確認
+        df_cus_prob = df_cus_prob[~df_cus_prob.index.isin(df_pre_orderd['顧客ID'].unique())]
+        str_preday = predict_day.strftime('%Y%m%d')
+        str_preday = str_preday[2:]
+        df_youkaku = SQL2DF.read_youkakunin_chose_day(db, str_preday, str_preday, lunch_diner)
+        #要確認に含まれていない確率の顧客
+        df_cus_prob2 = df_cus_prob[~df_cus_prob.index.isin(df_youkaku['顧客ID'].unique())]
+        df_cus_prob2['店名'] = db
+        #確率に含まれていない要確認の顧客
+        df_youkaku2 = df_youkaku[~df_youkaku['顧客ID'].isin(df_cus_prob.index.unique())]
+        df_youkaku2['店名'] = db
+        
+        # print('=====================')
+        # print(df_cus_prob2)
+        # print(df_youkaku2)     
+        # print('=====================')
+    
         # df_time_over更新と保存
         df_time_over = update_save_df_time_over(db,lunch_diner,df_time_over,
                                                 df_cus_Ex_time_over,predict_day,sn)
@@ -624,6 +661,9 @@ def main(predict_daytime_input,db_list_Input,lunch_diner,now_daytime,inspect):
         
         df_agri_cus_Ex = pd.concat([df_agri_cus_Ex, df_cus_Ex])
         df_agri_time_over = pd.concat([df_agri_time_over, df_time_over])
+        
+        df_agri_cus_prob = pd.concat([df_agri_cus_prob, df_cus_prob2])
+        df_agri_cus_youkaku = pd.concat([df_agri_cus_youkaku, df_youkaku2])
         #%% 注文日の結果を読み込む
         if inspect:
             df_correct = SQL2DF.read_products_data_chose_day_time(
@@ -666,5 +706,5 @@ def main(predict_daytime_input,db_list_Input,lunch_diner,now_daytime,inspect):
     #write_DB_results(df_agri_results,lunch_diner,predict_day)
     
     #%%
-    return [df_agri_results,df_agri_correct,df_agri_cus_Ex,df_agri_time_over]
+    return [df_agri_results,df_agri_correct,df_agri_cus_prob,df_agri_cus_youkaku]
 

@@ -86,12 +86,12 @@ class moritukeView(TemplateView):
         lunch_diner = '01' # 昼：01  夕:02
         
         #弁当数予測
-        [df_predict,df_cus_Ex,df_time_over] = \
+        [df_predict,df_cus_prob,df_cus_youkaku] = \
             web.predict_num(predict_daytime,lunch_diner)
-        if len(df_cus_Ex) > 0:
-            df_cus_Ex    = df_cus_Ex.set_index('顧客名')
-            df_cus_Ex    = df_cus_Ex.sort_values(predict_products[0],ascending=False)
-            df_time_over = df_time_over.set_index('顧客名')
+        # if len(df_cus_Ex) > 0:
+        #     df_cus_Ex    = df_cus_Ex.set_index('顧客名')
+        #     df_cus_Ex    = df_cus_Ex.sort_values(predict_products[0],ascending=False)
+        #     df_time_over = df_time_over.set_index('顧客名')
     
         #print(df_cus_Ex)
         
@@ -186,8 +186,8 @@ class moritukeView(TemplateView):
             'sousuu'            : sousuu,
             'shidashi_sousuu'   : shidashi_sousuu,
             'df_shikomi'        : df_shikomi,
-            'df_cus_Ex'         : df_cus_Ex.to_html(),
-            'df_time_over'      : df_time_over.to_html()
+            'df_cus_Ex'         : df_cus_prob.to_html(index = False),
+            'df_time_over'      : df_cus_youkaku.to_html(index = False)
             }
         
         response = render(request, 'morituke/predict.html', self.params)
