@@ -19,7 +19,9 @@ class seizouInputForm(forms.Form):
     han_oomori      = forms.IntegerField(label='ハン大')
     udon            = forms.IntegerField(label='うどん')
     soba            = forms.IntegerField(label='そば')
-    yasai            = forms.IntegerField(label='野菜')
+    yasai           = forms.IntegerField(label='野菜')
+    irodori         = forms.IntegerField(label='彩')
+    kisetu          = forms.IntegerField(label='季節')
 
 class tyouseiInputForm(forms.Form):
     date            = forms.DateField(label='日付')
@@ -34,3 +36,5 @@ class tyouseiInputForm(forms.Form):
     udon            = forms.IntegerField(label='うどん', required=False)
     soba            = forms.IntegerField(label='そば', required=False)
     yasai            = forms.IntegerField(label='野菜', required=False)
+    irodori         = forms.IntegerField(label='彩', required=False)
+    kisetu          = forms.IntegerField(label='季節', required=False)

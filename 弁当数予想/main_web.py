@@ -209,6 +209,8 @@ def df_products_lunch_diner(lunch_diner):
         df_products.loc['冷やしうどん','商品_ID'] = 115
         df_products.loc['冷やしそば','商品_ID'] = 116
         df_products.loc['お野菜弁当','商品_ID'] = 117
+        df_products.loc['昼食弁当_彩','商品_ID'] = 15
+        df_products.loc['季節のお弁当','商品_ID'] = 119
         
         df_products.loc['昼食弁当_並','メイン分類'] = '昼日替'
         df_products.loc['昼食弁当_大','メイン分類'] = '昼日替'
@@ -221,6 +223,8 @@ def df_products_lunch_diner(lunch_diner):
         df_products.loc['冷やしうどん','メイン分類'] = '昼日替'
         df_products.loc['冷やしそば','メイン分類'] = '昼日替'
         df_products.loc['お野菜弁当','メイン分類'] = '昼日替'
+        df_products.loc['昼食弁当_彩','メイン分類'] = '昼日替'
+        df_products.loc['季節のお弁当','メイン分類'] = '昼日替'
         
         # 食べれないメニューがあった時の弁当をどれに変更するか
         df_products.loc['昼食弁当_並','メニューNG変更先'] = 'お魚弁当_並'
@@ -234,6 +238,8 @@ def df_products_lunch_diner(lunch_diner):
         df_products.loc['冷やしうどん','メニューNG変更先'] = '昼食弁当_並'
         df_products.loc['冷やしそば','メニューNG変更先'] = '昼食弁当_並'
         df_products.loc['お野菜弁当','メニューNG変更先'] = '昼食弁当_並'
+        df_products.loc['昼食弁当_彩','メニューNG変更先'] = '昼食弁当_並'
+        df_products.loc['季節のお弁当','メニューNG変更先'] = '昼食弁当_並'
         
     else:
         df_products = pd.DataFrame(index = ['夕食お肉惣菜セット','夕食お魚惣菜セット',
@@ -556,7 +562,7 @@ def agri_results(df_products,df_cus_Ex,df_agri_orderd,df_agri_results,db):
 
 def main(predict_daytime_input,db_list_Input,lunch_diner,now_daytime,inspect):
     
-    term = 3 # 平日の過去のデータの日数
+    term = 5 # 平日の過去のデータの日数
     term_holi = 2 # 祝日の過去のデータの日数
     term_menu = 120
     term_holi_closed_menu_days = 180 #　祝日と休業日,メニューを取得する日数

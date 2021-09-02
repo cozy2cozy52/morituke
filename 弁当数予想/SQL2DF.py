@@ -8,7 +8,7 @@ import jpholiday
 import urllib
 from sqlalchemy import create_engine
 
-server = '192.168.24.30' # 30:dev  10:ofukuro
+server = '192.168.24.10' # 30:dev  10:ofukuro
 class sql2df:
     
     def __init__(self,query,tupls,db,df_columns):

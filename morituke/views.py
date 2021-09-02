@@ -12,7 +12,8 @@ import morituke.forms as forms
 predict_products = \
     ['昼食弁当_並','昼食弁当_大','お魚弁当_並','お魚弁当_大',
      'からあげ弁当_並','からあげ弁当_大','ハンバーグ弁当_並',
-     'ハンバーグ弁当_大','冷やしうどん','冷やしそば','お野菜弁当']
+     'ハンバーグ弁当_大','冷やしうどん','冷やしそば','お野菜弁当',
+     '昼食弁当_彩','季節のお弁当']
 
 # 仕出しを定番に追加する品目
 shidashi2teiban = \
@@ -20,7 +21,7 @@ shidashi2teiban = \
     
 display_name = \
     ['並','大','魚並','魚大','から並','から大',
-     'ハン並','ハン大','うどん','そば','野菜']
+     'ハン並','ハン大','うどん','そば','野菜','彩','季節']
     
 form_name_dict = {predict_products[0]:'nami',
                   predict_products[1]:'oomori',
@@ -32,7 +33,9 @@ form_name_dict = {predict_products[0]:'nami',
                   predict_products[7]:'han_oomori',
                   predict_products[8]:'udon',
                   predict_products[9]:'soba',
-                  predict_products[10]:'yasai'
+                  predict_products[10]:'yasai',
+                  predict_products[11]:'irodori',
+                  predict_products[12]:'kisetu'
                   } #form.pyで使用する名前
 
 shikomi_dict = \
@@ -131,6 +134,8 @@ class moritukeView(TemplateView):
         df_seizou = SQL2DF.get_seizou_num( predict_day,'製造数')
         for p in predict_products:
             df_predict.loc[p,'製造'] = df_seizou[df_seizou['商品名']==p]['製造数'].sum()
+        print('=================================')
+        print(df_predict['製造'])
         df_predict['製造'] = df_predict['製造'].astype(int)
         df_predict['余り'] = df_predict['製造']-df_predict['注文']
         df_predict = df_predict.reindex(columns=['予想', '製造','注文','余り'])
