@@ -194,7 +194,7 @@ def df_products_lunch_diner(lunch_diner):
         df_products = pd.DataFrame(index = \
         ['昼食弁当_並','昼食弁当_大','お魚弁当_並','お魚弁当_大',
          'からあげ弁当_並','からあげ弁当_大','ハンバーグ弁当_並',
-         'ハンバーグ弁当_大','冷やしうどん','冷やしそば'],
+         'ハンバーグ弁当_大'],
         columns = ['商品_ID','メイン分類','メニュー_ID',
                     'メニュー_名','同メニュー過去回数','pop',
                      'メニューNG変更先'])
@@ -206,11 +206,10 @@ def df_products_lunch_diner(lunch_diner):
         df_products.loc['からあげ弁当_大','商品_ID'] = 112
         df_products.loc['ハンバーグ弁当_並','商品_ID'] = 113
         df_products.loc['ハンバーグ弁当_大','商品_ID'] = 114
-        df_products.loc['冷やしうどん','商品_ID'] = 115
-        df_products.loc['冷やしそば','商品_ID'] = 116
         df_products.loc['お野菜弁当','商品_ID'] = 117
         df_products.loc['昼食弁当_彩','商品_ID'] = 15
         df_products.loc['季節のお弁当','商品_ID'] = 119
+        df_products.loc['キーマカレーうどん','商品_ID'] = 120
         
         df_products.loc['昼食弁当_並','メイン分類'] = '昼日替'
         df_products.loc['昼食弁当_大','メイン分類'] = '昼日替'
@@ -220,11 +219,10 @@ def df_products_lunch_diner(lunch_diner):
         df_products.loc['からあげ弁当_大','メイン分類'] = '昼日替'
         df_products.loc['ハンバーグ弁当_並','メイン分類'] = '昼日替'
         df_products.loc['ハンバーグ弁当_大','メイン分類'] = '昼日替'
-        df_products.loc['冷やしうどん','メイン分類'] = '昼日替'
-        df_products.loc['冷やしそば','メイン分類'] = '昼日替'
         df_products.loc['お野菜弁当','メイン分類'] = '昼日替'
         df_products.loc['昼食弁当_彩','メイン分類'] = '昼日替'
         df_products.loc['季節のお弁当','メイン分類'] = '昼日替'
+        df_products.loc['キーマカレーうどん','メイン分類'] = '昼日替'
         
         # 食べれないメニューがあった時の弁当をどれに変更するか
         df_products.loc['昼食弁当_並','メニューNG変更先'] = 'お魚弁当_並'
@@ -235,11 +233,10 @@ def df_products_lunch_diner(lunch_diner):
         df_products.loc['からあげ弁当_大','メニューNG変更先'] = '昼食弁当_並'
         df_products.loc['ハンバーグ弁当_並','メニューNG変更先'] = '昼食弁当_並'
         df_products.loc['ハンバーグ弁当_大','メニューNG変更先'] = '昼食弁当_並'
-        df_products.loc['冷やしうどん','メニューNG変更先'] = '昼食弁当_並'
-        df_products.loc['冷やしそば','メニューNG変更先'] = '昼食弁当_並'
         df_products.loc['お野菜弁当','メニューNG変更先'] = '昼食弁当_並'
         df_products.loc['昼食弁当_彩','メニューNG変更先'] = '昼食弁当_並'
         df_products.loc['季節のお弁当','メニューNG変更先'] = '昼食弁当_並'
+        df_products.loc['キーマカレーうどん','メニューNG変更先'] = '昼食弁当_並'
         
     else:
         df_products = pd.DataFrame(index = ['夕食お肉惣菜セット','夕食お魚惣菜セット',

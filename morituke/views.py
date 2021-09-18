@@ -8,12 +8,9 @@ import 弁当数予想.Write_DB as Write_DB
 import pandas as pd
 import datetime
 import morituke.forms as forms
+import global_values as gv
 
-predict_products = \
-    ['昼食弁当_並','昼食弁当_大','お魚弁当_並','お魚弁当_大',
-     'からあげ弁当_並','からあげ弁当_大','ハンバーグ弁当_並',
-     'ハンバーグ弁当_大','冷やしうどん','冷やしそば','お野菜弁当',
-     '昼食弁当_彩','季節のお弁当']
+predict_products = gv.predict_products
 
 # 仕出しを定番に追加する品目
 shidashi2teiban = \
@@ -21,7 +18,7 @@ shidashi2teiban = \
     
 display_name = \
     ['並','大','魚並','魚大','から並','から大',
-     'ハン並','ハン大','うどん','そば','野菜','彩','季節']
+     'ハン並','ハン大','野菜','彩','季節','カレー']
     
 form_name_dict = {predict_products[0]:'nami',
                   predict_products[1]:'oomori',
@@ -31,11 +28,10 @@ form_name_dict = {predict_products[0]:'nami',
                   predict_products[5]:'kara_oomori',
                   predict_products[6]:'han_nami',
                   predict_products[7]:'han_oomori',
-                  predict_products[8]:'udon',
-                  predict_products[9]:'soba',
-                  predict_products[10]:'yasai',
-                  predict_products[11]:'irodori',
-                  predict_products[12]:'kisetu'
+                  predict_products[8]:'yasai',
+                  predict_products[9]:'irodori',
+                  predict_products[10]:'kisetu',
+                  predict_products[11]:'care'
                   } #form.pyで使用する名前
 
 shikomi_dict = \

@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('morituke/',include('morituke.urls')),
     path('shidashi/',include('shidashi.urls')),
+    path('results/',include('results.urls')),
 ]

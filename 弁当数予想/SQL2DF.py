@@ -679,6 +679,50 @@ def read_products_data_chose_day_time(dict_col_list,db,register_time,
 #                                 {},'四日市店',now_daytime,
 #                                 predict_daytime,predict_daytime,'01')
 
+#%% 登録時刻を指定して販売データを取り出し
+def read_products_data_chose_register_day(dict_col_list,db,
+                                          register_stime,register_ltime,
+                                 start_daytime,last_daytime,lunch_diner):
+    
+    str_start_day = datetime2otodokeday(start_daytime)    
+    str_last_day = datetime2otodokeday(last_daytime)    
+
+    query_select_list = ['日付', '顧客名', '商品名', '個数', '登録時刻','顧客ID','キャンセル']
+    query_select_list_str = query_select_str(query_select_list)
+    
+    # query文作成
+    query = query_select_list_str + \
+               'from 販売データ \
+               INNER JOIN 販売明細 ON 販売データ.伝票番号 = 販売明細.伝票番号 \
+               WHERE ' + \
+               ' 時間帯 = ' + lunch_diner + \
+               " AND 日付 >= '" + str_start_day + "'" + \
+               " AND 日付 <= '" + str_last_day + "'" + \
+               " AND 登録時刻 >= '" +register_stime.strftime('%Y-%m-%d %H:%M:%S') + "'" + \
+               " AND 登録時刻 <= '" +register_ltime.strftime('%Y-%m-%d %H:%M:%S') + "'" + \
+               ' AND NOT 顧客名 LIKE ? ' + \
+               ' AND NOT 商品名 LIKE ? ' + \
+               ' AND NOT 商品名 LIKE ? '
+               
+    [query,tupls] = query_for_IN(query,dict_col_list)
+    tupls = tuple(['回送']) + tupls
+    tupls = tuple(['★特%']) + tupls # 特弁は除く
+    tupls = tuple(['注文外%']) + tupls
+    #    print(query)
+    #    print(tupls)
+    
+    #　データ抽出、ｄｆ作成
+    df_columns = query_select_list
+    obj = sql2df(query,tupls,db,df_columns)
+    df = obj.make_df()
+    
+    if len(df) > 0:
+        df = otodoke_date(df,'日付')
+        
+    df = df[~((df['商品名']=='要確認') & (df['キャンセル']==0))]
+    
+    return df
+
 #%% menuデータを取得
 def get_menu(lunch_diner,from_day,end_day,db,main_menu):  
     
