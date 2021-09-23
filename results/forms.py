@@ -31,3 +31,29 @@ class sum_InputForm(forms.Form):
     )
     
     term = forms.IntegerField(label='日数',min_value=1,max_value=31,initial=7)
+    
+    c_week = forms.ChoiceField(widget=forms.Select, 
+                                 choices=[(0,"連続"),(1,"曜日")], # 定数リストを指定する
+                                 label="曜日毎")
+
+class graph_InputForm(forms.Form):
+    
+    day1 = forms.DateField(
+        widget=forms.DateInput(attrs={"type":"date"})
+        ,label='始め',initial=datetime.date.today()
+    )
+    
+    day2 = forms.DateField(
+        widget=forms.DateInput(attrs={"type":"date"})
+        ,label='終わり',initial=datetime.date.today()
+    )
+        
+    num_type = forms.MultipleChoiceField(widget=forms.SelectMultiple, 
+                                 choices=[("製造数","製造数"),
+                                          ("注文数","注文数"),
+                                          ("差","差")], 
+                                 label="種類")
+    
+    hinmei = forms.ChoiceField(widget=forms.Select, 
+                                 choices=gv.predict_products_tuple, # 定数リストを指定する
+                                 label="品名")

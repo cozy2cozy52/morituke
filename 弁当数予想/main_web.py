@@ -48,15 +48,24 @@ def caluculate_Ex_base(df_data,products_Name):
     df_cus_Ex = pd.DataFrame()
     df_cus_prob = pd.DataFrame()
     bosuu = len(df_data['日付'].unique())
+    # for id1 in df_data['顧客ID']:
+    #     df_tmp_id = df_data[df_data['顧客ID']==id1]
+    #     cancel_num = len(df_tmp_id[df_tmp_id['キャンセル']==1])
+    #     bosuu_id = bosuu - cancel_num
+    #     if bosuu_id > 0:
+    #         for p in products_Name:
+    #             df_tmp_p = df_tmp_id[df_tmp_id['商品名']==p]
+    #             df_cus_Ex.loc[id1,p] = df_tmp_p['個数'].sum()/bosuu_id
+    #         df_cus_prob.loc[id1,'注文確率'] = len(df_tmp_id['日付'].unique())/bosuu
+    
     for id1 in df_data['顧客ID']:
         df_tmp_id = df_data[df_data['顧客ID']==id1]
-        cancel_num = len(df_tmp_id[df_tmp_id['キャンセル']==1])
-        bosuu_id = bosuu - cancel_num
-        if bosuu_id > 0:
-            for p in products_Name:
-                df_tmp_p = df_tmp_id[df_tmp_id['商品名']==p]
-                df_cus_Ex.loc[id1,p] = df_tmp_p['個数'].sum()/bosuu_id
-            df_cus_prob.loc[id1,'注文確率'] = len(df_tmp_id['日付'].unique())/bosuu
+        for p in products_Name:
+            df_tmp_p = df_tmp_id[(df_tmp_id['商品名']==p) & 
+                                 (df_tmp_id['キャンセル']==0)]
+            df_cus_Ex.loc[id1,p] = df_tmp_p['個数'].sum()/bosuu
+        df_cus_prob.loc[id1,'注文確率'] = len(df_tmp_id['日付'].unique())/bosuu
+    
     return [df_cus_Ex,df_cus_prob]
 
 #%%
@@ -447,14 +456,14 @@ def make_Ex(db,lunch_diner,
     past_data_days = pick_up_date_for_data(predict_day,now_daytime,
                               term,term_holi,holidays,closed_days,
                               holi_closed_menu_from_day,predict_daytime)
-#    print('---------past_data_days---------------------------------')
-#    print(past_data_days)
+    # print('---------past_data_days---------------------------------')
+    # print(past_data_days)
 
     #%　予想のためのデータを読み込む
     df_past_data = INPUT_DB_Data(db,lunch_diner,now_daytime
                                  ,past_data_days,df_products.index)
-#    print('---------df_past_data---------------------------------')
-#    print(df_past_data)
+    # print('---------df_past_data---------------------------------')
+    # print(df_past_data[df_past_data['顧客ID']==3963])
 
 
     ##################% 顧客の絞り込み

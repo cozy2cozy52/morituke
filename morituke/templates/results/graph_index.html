@@ -9,9 +9,12 @@
 </head>
 <body>
     <h1>{{title}}</h1>
-    <table>
-    <tr><td valign="top">{{df_sum_results|safe}}</td></tr>
-    </table>
-    <img src="data:image/png;base64, {{ graph | safe }} " alt="">
+    <form action="{% url 'graph' %}" method="POST">
+        {% csrf_token %}
+        <table>
+        {{ form.as_table|safe}}
+        </table>
+        <input type="submit" value="表示">
+    </form>
 </body>
 </html>

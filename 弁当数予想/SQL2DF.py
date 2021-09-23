@@ -1036,6 +1036,37 @@ def get_seizou_num(day1,column):
 # day1 = datetime.date(2021,6,5)
 # df = get_seizou_num(day1,'製造数')
 
+#%% 配達共通の製造数を取得　期間指定
+def get_seizou_num_term(day1,day2,column):
+    db = "配達共通"
+    query_select_list = ['日付','商品名',column]
+    query_select_list_str = query_select_str(query_select_list)
+    
+    # query文作成    
+    query = query_select_list_str + \
+               'from 製造' + \
+               " WHERE 日付 >= '" + day1.strftime('%Y-%m-%d') + "'" + \
+               " AND 日付 <= '" + day2.strftime('%Y-%m-%d') + "';"
+    
+    tupls = ()
+    
+    #print(query)
+    #print(tupls)
+    
+    #　データ抽出、ｄｆ作成
+    df_columns = query_select_list
+    obj = sql2df(query,tupls,db,df_columns)
+    df = obj.make_df()
+    df[column] = df[column].astype(int)
+#    print(df)
+
+    return df
+
+
+# day1 = datetime.date(2021,9,5)
+# day2 = datetime.date(2021,9,6)
+# df = get_seizou_num_term(day1,day2,'製造数')
+
 #%% 非表示でない顧客を取得
 def get_kokyaku_visible(db):
     query_select_list = ['顧客ID','名前']
