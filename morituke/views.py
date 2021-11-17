@@ -115,6 +115,15 @@ class moritukeView(TemplateView):
                 df_predict.loc[name,'注文'] += df_append.loc[j,'数量']
         df_shidashi = df_shidashi[~df_shidashi['品名'].isin(append_list)]
         
+        #店の弁当でdf_predictに追加する
+        df_append_s = df_list[0][df_list[0][cus_name_list[0]].isin(predict_products)]
+        if len(df_append_s)>0:
+            for j in df_append_s.index:
+                name = df_append_s.loc[j,cus_name_list[0]]
+                df_predict.loc[name,'お店'] = df_append_s.loc[j,'数量']
+        df_list[0] = df_list[0][~df_list[0][cus_name_list[0]].isin(predict_products)]
+        df_predict = df_predict.fillna(0)
+        
         #市役所の弁当でdf_predictに追加する
         df_append_c = df_list[2][df_list[2][cus_name_list[2]].isin(city_append_list)]
         if len(df_append_c)>0:
@@ -135,14 +144,17 @@ class moritukeView(TemplateView):
         print('=================================')
         print(df_predict['製造'])
         df_predict['製造'] = df_predict['製造'].astype(int)
+        df_predict['お店'] = df_predict['お店'].astype(int)
         df_predict['余り'] = df_predict['製造']-df_predict['注文']
-        df_predict = df_predict.reindex(columns=['予想', '製造','注文','余り'])
+        df_predict = df_predict.reindex(columns=['予想', '製造','注文','余り','お店'])
         
         #製造数読込
         df_tyousei = SQL2DF.get_seizou_num( predict_day,'調整数')
         for p in predict_products:
             df_predict.loc[p,'予想'] += df_tyousei[df_tyousei['商品名']==p]['調整数'].sum()
-            
+        
+        df_predict['製造計'] = df_predict['製造'] + df_predict['お店']
+        
         #仕込み        
         df_shikomi = pd.DataFrame(index=['肉','魚','副菜'],columns=['数量'])
         df_shikomi.loc['肉','数量'] = df_predict.loc[shikomi_dict['肉'][0],'製造'] + \
