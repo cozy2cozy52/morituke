@@ -29,7 +29,8 @@ class resultsView(TemplateView):
         day1 = datetime.date(datetime1.year,datetime1.month,datetime1.day)
         menu_name = request.POST['hinmei']
         df = results.make_predict_results(day1,db,menu_name)
-        #print(df_predict_results)
+        print('%%%%%%%%')
+        print(df)
         
         df_res = pd.DataFrame()
         

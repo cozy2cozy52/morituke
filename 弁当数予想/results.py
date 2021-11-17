@@ -55,7 +55,8 @@ class results_class:
         self.df_predict_time = \
             self.df_predict_time['3/4時刻']<datetime.timedelta(hours=-5)
         self.df_cus_Ex = self.df_cus_Ex[self.df_cus_Ex.index.isin(self.df_predict_time.index)]
-    
+        
+        
     def select_menu(self,menu_name):
         self.df_predict_num = self.df_cus_Ex[[menu_name,'顧客名']]
         self.df_predict_num = self.df_predict_num.rename(columns={menu_name:'予想数'})
