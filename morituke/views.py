@@ -18,8 +18,9 @@ shidashi2teiban = \
     
 display_name = \
     ['並','大','魚並','魚大','から並','から大',
-     'ハン並','ハン大','野菜','彩','ライス',
-     '温うどん','鶏照丼']
+     'ハン並','ハン大','野菜','彩','カレ並','カレ大',
+     'うど並','うど大','そば並','そば大',
+     '鶏丼並','鶏丼大']
     
 form_name_dict = {predict_products[0]:'nami',
                   predict_products[1]:'oomori',
@@ -31,9 +32,14 @@ form_name_dict = {predict_products[0]:'nami',
                   predict_products[7]:'han_oomori',
                   predict_products[8]:'yasai',
                   predict_products[9]:'irodori',
-                  predict_products[10]:'rice',
-                  predict_products[11]:'udon',
-                  predict_products[12]:'toriteri'
+                  predict_products[10]:'curry_nami',
+                  predict_products[11]:'curry_oomori',
+                  predict_products[12]:'udon_nami',
+                  predict_products[13]:'udon_oomori',
+                  predict_products[14]:'soba_nami',
+                  predict_products[15]:'soba_oomori',
+                  predict_products[16]:'toriteri_nami',
+                  predict_products[17]:'toriteri_oomori'
                   } #form.pyで使用する名前
 
 shikomi_dict = \
@@ -157,13 +163,13 @@ class moritukeView(TemplateView):
         
         #仕込み        
         df_shikomi = pd.DataFrame(index=['肉','魚','副菜'],columns=['数量'])
-        df_shikomi.loc['肉','数量'] = df_predict.loc[shikomi_dict['肉'][0],'製造'] + \
-                                df_predict.loc[shikomi_dict['肉'][1],'製造'] + \
-                                df_predict.loc[shikomi_dict['肉'][2],'製造'] + \
+        df_shikomi.loc['肉','数量'] = df_predict.loc[shikomi_dict['肉'][0],'製造計'] + \
+                                df_predict.loc[shikomi_dict['肉'][1],'製造計'] + \
+                                df_predict.loc[shikomi_dict['肉'][2],'製造計'] + \
                                 df_list[0][df_list[0][cus_name_list[0]].isin(shikomi_dict['肉'])]['数量'].sum()
                                 
-        df_shikomi.loc['魚','数量'] = df_predict.loc[shikomi_dict['魚'][0],'製造'] + \
-                                df_predict.loc[shikomi_dict['魚'][1],'製造'] + \
+        df_shikomi.loc['魚','数量'] = df_predict.loc[shikomi_dict['魚'][0],'製造計'] + \
+                                df_predict.loc[shikomi_dict['魚'][1],'製造計'] + \
                                 df_list[0][df_list[0][cus_name_list[0]].isin(shikomi_dict['魚'])]['数量'].sum()
         df_shikomi = df_shikomi.fillna(0)
         for d in range(len(cus_name_list)):
@@ -174,10 +180,10 @@ class moritukeView(TemplateView):
                 df_shikomi.loc['副菜','数量'] += num
         df_shikomi.loc['副菜','数量'] += \
             df_shikomi.loc['肉','数量'] + df_shikomi.loc['魚','数量'] + \
-            df_predict.loc[shikomi_dict['副菜'][1],'製造'] + \
-            df_predict.loc[shikomi_dict['副菜'][2],'製造'] + \
-            df_predict.loc[shikomi_dict['副菜'][3],'製造'] + \
-            df_predict.loc[shikomi_dict['副菜'][4],'製造']
+            df_predict.loc[shikomi_dict['副菜'][1],'製造計'] + \
+            df_predict.loc[shikomi_dict['副菜'][2],'製造計'] + \
+            df_predict.loc[shikomi_dict['副菜'][3],'製造計'] + \
+            df_predict.loc[shikomi_dict['副菜'][4],'製造計']
         
         #定番弁当の名前を短いものにする
         for i in range(len(predict_products)):
