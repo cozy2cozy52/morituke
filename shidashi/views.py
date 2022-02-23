@@ -23,7 +23,7 @@ class shidashiView(TemplateView):
         
         #読み込み
         from_day = datetime.date.today()
-        end_day  = from_day+datetime.timedelta(days=6)
+        end_day  = from_day+datetime.timedelta(days=13)
         df_shidashi = SQL2DF.get_shidashi_period(from_day,end_day)
         
         #絞り込み

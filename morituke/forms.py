@@ -27,6 +27,7 @@ class seizouInputForm(forms.Form):
     soba_oomori          = forms.IntegerField(label='そば大')
     toriteri_nami      = forms.IntegerField(label='鶏丼並')
     toriteri_oomori      = forms.IntegerField(label='鶏丼大')
+    kisetu      = forms.IntegerField(label='季節')
     
 class tyouseiInputForm(forms.Form):
     date            = forms.DateField(label='日付')
@@ -48,3 +49,4 @@ class tyouseiInputForm(forms.Form):
     soba_oomori          = forms.IntegerField(label='そば大', required=False)
     toriteri_nami      = forms.IntegerField(label='鶏丼並', required=False)
     toriteri_oomori      = forms.IntegerField(label='鶏丼大', required=False)
+    kisetu      = forms.IntegerField(label='季節', required=False)
