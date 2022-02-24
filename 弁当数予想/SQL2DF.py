@@ -757,14 +757,14 @@ def get_menu(lunch_diner,from_day,end_day,db,main_menu):
     
     tupls = ()
     
-#    print(query)
+    #print(query)
     #print(tupls)
     
     #　データ抽出、ｄｆ作成
     df_columns = query_select_list
     obj = sql2df(query,tupls,db,df_columns)
     df_menu = obj.make_df()
-#    print(df_menu)
+    #print(df_menu)
     
     # 曜日の列を追加
     df_menu = df_menu.set_index('年月日')
@@ -780,6 +780,7 @@ def get_menu(lunch_diner,from_day,end_day,db,main_menu):
             if len(df_tmp)>0:
                 df_date_menu.loc[d,'ID_' + m] = df_tmp['料理ID'][0]
                 df_date_menu.loc[d,'name_' + m] = df_tmp['料理名'][0]
+                df_date_menu.loc[d,'曜日'] = df_tmp['曜日'][0]
             else:
                 df_date_menu.loc[d,'ID_' + m] = -1
 #                str_tmp = str(d) + m + 'のメニューが登録されていません'
