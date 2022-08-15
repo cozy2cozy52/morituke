@@ -20,7 +20,7 @@ display_name = \
     ['並','大','魚並','魚大','から並','から大',
      'ハン並','ハン大','野菜','彩','カレ並','カレ大',
      'うど並','うど大','そば並','そば大',
-     '鶏丼並','鶏丼大','季節']
+     'のり弁','季節']
     
 form_name_dict = {predict_products[0]:'nami',
                   predict_products[1]:'oomori',
@@ -38,9 +38,8 @@ form_name_dict = {predict_products[0]:'nami',
                   predict_products[13]:'udon_oomori',
                   predict_products[14]:'soba_nami',
                   predict_products[15]:'soba_oomori',
-                  predict_products[16]:'toriteri_nami',
-                  predict_products[17]:'toriteri_oomori',
-                  predict_products[18]:'kisetu'
+                  predict_products[16]:'nori',
+                  predict_products[17]:'kisetu'
                   } #form.pyで使用する名前
 
 shikomi_dict = \
@@ -148,10 +147,10 @@ class moritukeView(TemplateView):
         df_seizou = SQL2DF.get_seizou_num( predict_day,'製造数')
         for p in predict_products:
             df_predict.loc[p,'製造'] = df_seizou[df_seizou['商品名']==p]['製造数'].sum()
-        print('=================================')
-        print(df_predict['製造'])
-        print('=================================')
-        print(df_predict['お店'])
+        # print('=================================')
+        # print(df_predict['製造'])
+        # print('=================================')
+        # print(df_predict['お店'])
         df_predict['製造'] = df_predict['製造'].astype(int)
         df_predict['お店'] = df_predict['お店'].astype(int)
         df_predict['余り'] = df_predict['製造']-df_predict['注文']

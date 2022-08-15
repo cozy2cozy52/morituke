@@ -27,7 +27,8 @@ def pick_up_date_for_data(predict_day,now_daytime,
     cand_days = []
     if (predict_day in holidays) & (predict_day.weekday() < 5):#祝日で平日
         for hd in holidays[1:-1]: # holidaysの最初は予想日なので除く
-            if (hd.weekday() < 5) & (hd < now_day)& (not hd in except_days):# 平日の場合
+            if (hd.weekday() < 5) & (hd < now_day) & (not hd in closed_days) \
+                                                   & (not hd in except_days):# 平日の場合
                 cand_days.append(hd) # 候補日追加
                 if len(cand_days)>=term_holi:
                     break
@@ -219,12 +220,11 @@ def df_products_lunch_diner(lunch_diner):
         df_products.loc['昼食弁当_彩','商品_ID'] = 15
         df_products.loc['キーマカレーライス_並','商品_ID'] = 121
         df_products.loc['キーマカレーライス_大','商品_ID'] = 128
-        df_products.loc['「温」ぶっかけうどん_並','商品_ID'] = 122
-        df_products.loc['「温」ぶっかけうどん_大','商品_ID'] = 129
-        df_products.loc['「温」ぶっかけそば_並','商品_ID'] = 131
-        df_products.loc['「温」ぶっかけそば_大','商品_ID'] = 132
-        df_products.loc['鶏照丼_並','商品_ID'] = 123
-        df_products.loc['鶏照丼_大','商品_ID'] = 130
+        df_products.loc['「冷」ぶっかけうどん_並','商品_ID'] = 141
+        df_products.loc['「冷」ぶっかけうどん_大','商品_ID'] = 142
+        df_products.loc['「冷」ぶっかけそば_並','商品_ID'] = 143
+        df_products.loc['「冷」ぶっかけそば_大','商品_ID'] = 144
+        df_products.loc['焼き鮭のり弁当','商品_ID'] = 146
         df_products.loc['季節のお弁当','商品_ID'] = 119
         
         df_products.loc['昼食弁当_並','メイン分類'] = '昼日替'
@@ -239,12 +239,11 @@ def df_products_lunch_diner(lunch_diner):
         df_products.loc['昼食弁当_彩','メイン分類'] = '昼日替'
         df_products.loc['キーマカレーライス_並','メイン分類'] = '昼日替'
         df_products.loc['キーマカレーライス_大','メイン分類'] = '昼日替'
-        df_products.loc['「温」ぶっかけうどん_並','メイン分類'] = '昼日替'
-        df_products.loc['「温」ぶっかけうどん_大','メイン分類'] = '昼日替'
-        df_products.loc['「温」ぶっかけそば_並','メイン分類'] = '昼日替'
-        df_products.loc['「温」ぶっかけそば_大','メイン分類'] = '昼日替'
-        df_products.loc['鶏照丼_並','メイン分類'] = '昼日替'
-        df_products.loc['鶏照丼_大','メイン分類'] = '昼日替'
+        df_products.loc['「冷」ぶっかけうどん_並','メイン分類'] = '昼日替'
+        df_products.loc['「冷」ぶっかけうどん_大','メイン分類'] = '昼日替'
+        df_products.loc['「冷」ぶっかけそば_並','メイン分類'] = '昼日替'
+        df_products.loc['「冷」ぶっかけそば_大','メイン分類'] = '昼日替'
+        df_products.loc['焼き鮭のり弁当','メイン分類'] = '昼日替'
         df_products.loc['季節のお弁当','メイン分類'] = '昼日替'
         
         # 食べれないメニューがあった時の弁当をどれに変更するか
@@ -260,12 +259,11 @@ def df_products_lunch_diner(lunch_diner):
         df_products.loc['昼食弁当_彩','メニューNG変更先'] = '昼食弁当_並'
         df_products.loc['キーマカレーライス_並','メニューNG変更先'] = '昼日替'
         df_products.loc['キーマカレーライス_大','メニューNG変更先'] = '昼日替'
-        df_products.loc['「温」ぶっかけうどん_並','メニューNG変更先'] = '昼日替'
-        df_products.loc['「温」ぶっかけうどん_大','メニューNG変更先'] = '昼日替'
-        df_products.loc['「温」ぶっかけそば_並','メニューNG変更先'] = '昼日替'
-        df_products.loc['「温」ぶっかけそば_大','メニューNG変更先'] = '昼日替'
-        df_products.loc['鶏照丼_並','メニューNG変更先'] = '昼日替'
-        df_products.loc['鶏照丼_大','メニューNG変更先'] = '昼日替'
+        df_products.loc['「冷」ぶっかけうどん_並','メニューNG変更先'] = '昼日替'
+        df_products.loc['「冷」ぶっかけうどん_大','メニューNG変更先'] = '昼日替'
+        df_products.loc['「冷」ぶっかけそば_並','メニューNG変更先'] = '昼日替'
+        df_products.loc['「冷」ぶっかけそば_大','メニューNG変更先'] = '昼日替'
+        df_products.loc['焼き鮭のり弁当','メニューNG変更先'] = '昼日替'
         df_products.loc['季節のお弁当','メニューNG変更先'] = '昼日替'
         
     else:
@@ -477,14 +475,14 @@ def make_Ex(db,lunch_diner,
     past_data_days = pick_up_date_for_data(predict_day,now_daytime,
                               term,term_holi,holidays,closed_days,
                               holi_closed_menu_from_day,predict_daytime)
-    # print('---------past_data_days---------------------------------')
-    # print(past_data_days)
+    print('---------past_data_days---------------------------------')
+    print(past_data_days)
 
     #%　予想のためのデータを読み込む
     df_past_data = INPUT_DB_Data(db,lunch_diner,now_daytime
                                  ,past_data_days,df_products.index)
-    # print('---------df_past_data---------------------------------')
-    # print(df_past_data[df_past_data['顧客ID']==3963])
+    print('---------df_past_data---------------------------------')
+    print(df_past_data)
 
 
     ##################% 顧客の絞り込み

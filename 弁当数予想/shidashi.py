@@ -15,7 +15,7 @@ class shidashi_class:
         df_c = self.df_read[self.df_read['キャンセル']==0]
         df = df_c[df_c['顧客名']==cus_name]
         d_list = ['注文日','時間帯','顧客名','配達時間','配達方面',
-                  'キャンセル','単価',
+                  'キャンセル',
                   '店頭引取時間','備考']
         df = df.drop(d_list, axis=1)
         df = df.sort_values('品名')
